@@ -13,15 +13,14 @@
 (define-syntax (beeswax-module-begin stx)
   (syntax-case stx ()
     [(_ . EXPRS)
-     (with-syntax ([ALL-DEFINED-OUT (datum->syntax #'EXPRS '(all-defined-out))])
+     (with-syntax ([ALL-DEFINED-OUT (datum->syntax #'EXPRS '(all-defined-out))]
+                   [DOC (datum->syntax #'EXPRS 'doc)]
+                   [METAS (datum->syntax #'EXPRS 'metas)])
        #'(doclang:#%module-begin
-          render
-          (λ (xs) (lambda (doc metas) (apply strip-leading-newlines xs)))
-          ;          (λ (xs)
-          ;            (lambda (doc metas filename)
-          ;              (apply bytes-append (map ->string->bytes (strip-leading-newlines (apply list xs))))))
+          render   ; name of exported function
+          car      ; use only the first value out of the expressions (the lambda)
           (provide ALL-DEFINED-OUT render)
-          'EXPRS))]))
+          (lambda (DOC METAS) (beeswax-concat-bytes (list . EXPRS)))))]))
 
 (define (->string->bytes x)
   (cond
@@ -32,4 +31,4 @@
     [else (->string->bytes (format "~v" x))]))
 
 (define (beeswax-concat-bytes xs)
-  (apply bytes-append (map ->string->bytes xs)))
+  (apply bytes-append (map ->string->bytes (strip-leading-newlines xs))))
