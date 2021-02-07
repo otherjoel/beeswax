@@ -7,8 +7,8 @@
 (provide (except-out (all-from-out racket/base) #%module-begin)
          (rename-out [beeswax-module-begin #%module-begin]))
 
-(define (strip-leading-newlines doc)
-  (dropf doc (λ (ln) (member ln (list "\n" "")))))
+(define (strip-leading-newlines lst)
+  (dropf lst (λ (ln) (member ln (list "\n" "")))))
 
 (define-syntax (beeswax-module-begin stx)
   (syntax-case stx ()
@@ -16,12 +16,12 @@
      (with-syntax ([ALL-DEFINED-OUT (datum->syntax #'EXPRS '(all-defined-out))])
        #'(doclang:#%module-begin
           render
-          (λ (xs)
-            (lambda (doc metas filename)
-              (apply bytes-append (map ->string->bytes (strip-leading-newlines xs)))))
-          (provide ALL-DEFINED-OUT
-                   render)
-          (begin . EXPRS)))]))
+          (λ (xs) (lambda (doc metas) (apply strip-leading-newlines xs)))
+          ;          (λ (xs)
+          ;            (lambda (doc metas filename)
+          ;              (apply bytes-append (map ->string->bytes (strip-leading-newlines (apply list xs))))))
+          (provide ALL-DEFINED-OUT render)
+          'EXPRS))]))
 
 (define (->string->bytes x)
   (cond

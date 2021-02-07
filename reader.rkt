@@ -1,4 +1,4 @@
-#lang debug racket/base
+#lang racket/base
 
 (require scribble/reader)
 
@@ -11,7 +11,10 @@
 
 (define (*read-syntax name inport)
   (define exprs (read-lozenge-syntax name inport))
-  #R (datum->syntax
+  (datum->syntax
    #f
-   `(module beeswax-result beeswax/expander
-      ,exprs)))
+   `(module wax-wrapper racket/base
+      (module wax-renderer beeswax/expander
+        ,@exprs)
+      (require 'wax-renderer)
+      (provide (all-from-out 'wax-renderer)))))
