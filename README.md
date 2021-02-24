@@ -6,7 +6,7 @@ publish and maintain.
 
 The idea is that you could create a module using Pollen syntax like this:
 
-    #lang beeswax
+    #lang beeswax/template
 
     <html>
     <head>
@@ -39,4 +39,4 @@ work the same as `raco pollen render` with two differences:
 
 * When templates have their own `#lang`, they can be better supported by IDEs like DrRacket: REPL
   interactions, syntax highlighting, etc.
-* This approach *might** be faster.
+* This approach *might* be faster than `include-template`-based approaches.
