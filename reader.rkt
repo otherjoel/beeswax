@@ -13,8 +13,8 @@
   (define exprs (read-lozenge-syntax name inport))
   (datum->syntax
    #f
-   `(module wax-wrapper racket/base
-      (module wax-renderer beeswax/expander
+   `(module beeswax-template racket/base
+      (module template-render beeswax/expander
         ,@exprs)
-      (require 'wax-renderer)
-      (provide (all-from-out 'wax-renderer)))))
+      (require 'template-render)
+      (provide (all-from-out 'template-render)))))
