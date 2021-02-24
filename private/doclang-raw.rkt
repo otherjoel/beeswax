@@ -19,9 +19,7 @@
 (define-syntax (doc-begin stx)
   (syntax-case stx ()
     [(_ m-id post-process (expr ...))
-     #`(begin
-         (define m-id (post-process (list . #,(reverse (syntax->list #'(expr ...))))))
-         (provide m-id))]
+     #`(define m-id (post-process (list . #,(reverse (syntax->list #'(expr ...))))))]
     [(_ m-id post-process exprs . body)
      ;; `body' probably starts with lots of string constants; it's
      ;; slow to trampoline on every string, so do them in a batch

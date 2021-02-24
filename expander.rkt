@@ -1,6 +1,7 @@
 #lang racket/base
 
 (require (for-syntax racket/base)
+         racket/contract/base
          racket/list
          (prefix-in doclang: "private/doclang-raw.rkt"))
 
@@ -22,6 +23,7 @@
             (ormap (lambda (kw) (free-identifier=? #'id kw))
                    (syntax->list #'(require
                                      provide
+                                     define
                                      define-values
                                      define-syntaxes
                                      begin-for-syntax
@@ -42,6 +44,7 @@
        #'(doclang:#%module-begin
           render   ; name of exported identifier
           car      ; Exported identifier will bind to only the first value (the lambda)
+          (provide (contract-out (render (-> any/c hash? bytes?))))
           TOPLEVEL ...
           (lambda (DOC METAS) (beeswax-concat-bytes (list . (BODY ...))))))]))
 
