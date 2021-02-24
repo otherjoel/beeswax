@@ -1,9 +1,8 @@
 #lang racket/base
 
 (require (for-syntax racket/base)
-         racket/contract/base
-         racket/list
-         (prefix-in doclang: "private/doclang-raw.rkt"))
+         racket/contract
+         racket/list)
 
 (provide (except-out (all-from-out racket/base) #%module-begin)
          (rename-out [beeswax-module-begin #%module-begin]))
@@ -43,13 +42,12 @@
                    [DOC (datum->syntax #'EXPRS 'doc)]
                    [METAS (datum->syntax #'EXPRS 'metas)]
                    [HERE (datum->syntax #'EXPRS 'here)])
-       #'(doclang:#%module-begin
-          render   ; name of exported identifier
-          car      ; Exported identifier will bind to only the first value (the lambda)
-          (provide (contract-out (render (-> any/c hash? path-string? bytes?))))
+       #'(#%module-begin
+          (provide render)
           REQUIRES
           TOPLEVEL ...
-          (lambda (DOC METAS HERE)
+          (define/contract (render DOC METAS HERE)
+            (-> any/c hash? path-string? bytes?)
             (concat+write/bytes HERE (list . (BODY ...))))))]))
 
 (define (->string->bytes x)
