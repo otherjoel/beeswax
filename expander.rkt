@@ -39,22 +39,31 @@
   (syntax-case stx ()
     [(_ . EXPRS)
      (with-syntax ([((TOPLEVEL ...) (BODY ...)) (toplevel-forms-splitter #'EXPRS)]
+                   [REQUIRES (datum->syntax #'EXPRS '(require pollen/template pollen/pagetree))]
                    [DOC (datum->syntax #'EXPRS 'doc)]
-                   [METAS (datum->syntax #'EXPRS 'metas)])
+                   [METAS (datum->syntax #'EXPRS 'metas)]
+                   [HERE (datum->syntax #'EXPRS 'here)])
        #'(doclang:#%module-begin
           render   ; name of exported identifier
           car      ; Exported identifier will bind to only the first value (the lambda)
-          (provide (contract-out (render (-> any/c hash? bytes?))))
+          (provide (contract-out (render (-> any/c hash? path-string? bytes?))))
+          REQUIRES
           TOPLEVEL ...
-          (lambda (DOC METAS) (beeswax-concat-bytes (list . (BODY ...))))))]))
+          (lambda (DOC METAS HERE)
+            (concat+write/bytes HERE (list . (BODY ...))))))]))
 
 (define (->string->bytes x)
   (cond
     [(bytes? x) x]
     [(string? x) (string->bytes/utf-8 x)]
     [(or (null? x) (void? x)) #""]
-    [(or (symbol? x) (number? x) (path? x) (char? x)) (->string->bytes (format "~a" x))]
-    [else (->string->bytes (format "~v" x))]))
+    [(or (symbol? x) (number? x) (path? x) (char? x)) (string->bytes/utf-8 (format "~a" x))]
+    [else (string->bytes/utf-8 (format "~v" x))]))
 
-(define (beeswax-concat-bytes xs)
-  (apply bytes-append (map ->string->bytes (strip-leading-newlines xs))))
+(define (concat+write/bytes filename xs)
+  (with-output-to-file filename
+    (lambda ()
+      (define bits (apply bytes-append (map ->string->bytes (strip-leading-newlines xs))))
+      (write-bytes bits)
+      bits)
+    #:exists 'replace))
