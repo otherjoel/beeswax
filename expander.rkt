@@ -39,14 +39,15 @@
     [(_ . EXPRS)
      (with-syntax ([((TOPLEVEL ...) (BODY ...)) (toplevel-forms-splitter #'EXPRS)]
                    [REQUIRES (datum->syntax #'EXPRS '(require pollen/template pollen/pagetree))]
+                   [RENDER (datum->syntax #'EXPRS 'render)]
                    [DOC (datum->syntax #'EXPRS 'doc)]
                    [METAS (datum->syntax #'EXPRS 'metas)]
                    [HERE (datum->syntax #'EXPRS 'here)])
        #'(#%module-begin
-          (provide render)
+          (provide RENDER)
           REQUIRES
           TOPLEVEL ...
-          (define/contract (render DOC METAS HERE)
+          (define/contract (RENDER DOC METAS HERE)
             (-> any/c hash? path-string? bytes?)
             (concat+write/bytes HERE (list . (BODY ...))))))]))
 

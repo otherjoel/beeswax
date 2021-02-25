@@ -13,8 +13,5 @@
   (define exprs (read-lozenge-syntax name inport))
   (datum->syntax
    #f
-   `(module beeswax-template racket/base
-      (module template-render beeswax/expander
-        ,@exprs)
-      (require 'template-render)
-      (provide (all-from-out 'template-render)))))
+   `(module template-render beeswax/expander
+        ,@exprs)))
