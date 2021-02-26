@@ -1,6 +1,7 @@
 #lang racket/base
 
 (require (for-syntax racket/base)
+         pollen/pagetree
          racket/contract
          racket/list)
 
@@ -52,7 +53,7 @@
           REQUIRES
           TOPLEVEL ...
           (define/contract (RENDER DOC METAS HERE)
-            (-> any/c hash? path-string? bytes?)
+            (-> any/c hash? (or/c pagenode? path-string?) bytes?)
             DEFINES ...
             (concat+write/bytes HERE (list . (BODY ...))))))]))
 
@@ -65,7 +66,7 @@
     [else (string->bytes/utf-8 (format "~v" x))]))
 
 (define (concat+write/bytes filename xs)
-  (with-output-to-file filename
+  (with-output-to-file (format "~a" filename)
     (lambda ()
       (define bits (apply bytes-append (map ->string->bytes (strip-leading-whitespace xs))))
       (write-bytes bits)
