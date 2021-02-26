@@ -7,8 +7,8 @@
 (provide (except-out (all-from-out racket/base) #%module-begin)
          (rename-out [beeswax-module-begin #%module-begin]))
 
-(define (strip-leading-newlines lst)
-  (dropf lst (λ (ln) (member ln (list "\n" "")))))
+(define (strip-leading-whitespace lst)
+  (dropf lst (λ (ln) (or (member ln (list "" (void))) (regexp-match #px"^[\\s]+$" ln)))))
 
 ;; Split top-level stuff (requires, provides etc.) and defines out of a list of expressions
 (define-for-syntax (forms-splitter lst)
@@ -67,7 +67,7 @@
 (define (concat+write/bytes filename xs)
   (with-output-to-file filename
     (lambda ()
-      (define bits (apply bytes-append (map ->string->bytes (strip-leading-newlines xs))))
+      (define bits (apply bytes-append (map ->string->bytes (strip-leading-whitespace xs))))
       (write-bytes bits)
       bits)
     #:exists 'replace))
