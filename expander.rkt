@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require (for-syntax racket/base pollen/setup)
+(require (for-syntax racket/base pollen/setup racket/match)
          pollen/pagetree
          racket/contract
          racket/list)
@@ -40,8 +40,11 @@
        (loop #'body2 toplevelstuff defines (cons #'body1 normalstuff))])))
 
 (define-syntax (beeswax-module-begin stx)
-  (define pollen-rkt (path->string (find-nearest-default-directory-require (current-project-root))))
-  (define pollen-requires `(pollen/core pollen/template pollen/pagetree (file ,pollen-rkt)))
+  (define pollen-rkt
+    (match (find-nearest-default-directory-require (current-project-root))
+      [(? path? p) `((file ,(path->string p)))]
+      [_ '()]))
+  (define pollen-requires `(pollen/core pollen/template pollen/pagetree ,@pollen-rkt))
   (syntax-case stx ()
     [(_ . EXPRS)
      (with-syntax ([((TOPLEVEL ...) (DEFINES ...) (BODY ...)) (forms-splitter #'EXPRS)]
