@@ -34,7 +34,7 @@
       [((id rest ...) . body2)
        (and (identifier? #'id)
             (ormap (lambda (kw) (free-identifier=? #'id kw))
-                   (syntax->list #'(define define-values))))
+                   (syntax->list #'(define define-values match-define))))
        (loop #'body2 toplevelstuff (cons #'(id rest ...) defines) normalstuff)]
       [(body1 . body2)
        (loop #'body2 toplevelstuff defines (cons #'body1 normalstuff))])))
