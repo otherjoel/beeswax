@@ -60,7 +60,7 @@
           REQUIRES
           TOPLEVEL ...
           (define/contract (RENDER DOC METAS HERE)
-            (-> any/c hash? (or/c pagenode? path-string?) bytes?)
+            (-> any/c hash? pagenode? bytes?)
             DEFINES ...
             (concat+write/bytes HERE (list . (BODY ...))))))]))
 
