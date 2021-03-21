@@ -42,7 +42,11 @@
           (cond
             [(procedure? maybe-lexer) (maybe-lexer #:command-char my-command-char)]
             [else default])]
-         [(drracket:toolbar-buttons) default])] ;; TODO
+         [(drracket:toolbar-buttons)
+          (define maybe-button-maker
+            (dynamic-require 'pollen/private/drracket-buttons 'make-drracket-buttons (λ () #false)))
+          (when (procedure? maybe-button-maker)
+            (maybe-button-maker my-command-char))])]
       [(drracket:indentation)
        (λ (text pos)
          (define line-idx (send text position-line pos))
