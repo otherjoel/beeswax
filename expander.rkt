@@ -39,16 +39,18 @@
       [(body1 . body2)
        (loop #'body2 toplevelstuff defines (cons #'body1 normalstuff))])))
 
-(define-syntax (beeswax-module-begin stx)
+(define-for-syntax (pollen-requires)
   (define pollen-rkt
     (match (find-nearest-default-directory-require (current-project-root))
       [(? path? p) `((file ,(path->string p)))]
       [_ '()]))
-  (define pollen-requires `(pollen/core pollen/template pollen/pagetree ,@pollen-rkt))
+  `(require pollen/core pollen/template pollen/pagetree ,@pollen-rkt))
+
+(define-syntax (beeswax-module-begin stx)
   (syntax-case stx ()
     [(_ . EXPRS)
      (with-syntax ([((TOPLEVEL ...) (DEFINES ...) (BODY ...)) (forms-splitter #'EXPRS)]
-                   [REQUIRES (datum->syntax #'EXPRS `(require ,@pollen-requires))]
+                   [REQUIRES (datum->syntax #'EXPRS (pollen-requires))]
                    [RENDER (datum->syntax #'EXPRS 'render)]
                    [DOC (datum->syntax #'EXPRS 'doc)]
                    [METAS (datum->syntax #'EXPRS 'metas)]
