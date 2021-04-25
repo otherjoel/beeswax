@@ -56,7 +56,7 @@
                    [METAS (datum->syntax #'EXPRS 'metas)]
                    [HERE (datum->syntax #'EXPRS 'here)])
        #'(#%module-begin
-          (provide RENDER)
+          (provide EXPORT-FUNC)
           REQUIRES
           TOPLEVEL ...
           (define/contract (EXPORT-FUNC DOC METAS HERE)

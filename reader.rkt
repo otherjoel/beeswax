@@ -15,7 +15,7 @@
   (define exprs (read-pollen-syntax name inport))
   (datum->syntax
    #f
-   `(module template-render beeswax/template/expander
+   `(module template-render beeswax/expander
       ,@exprs)))
 
 ;; My get-info is largely lifted from pollen/private/reader-base.rkt
