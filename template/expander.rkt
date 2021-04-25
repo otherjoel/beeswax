@@ -51,7 +51,7 @@
     [(_ . EXPRS)
      (with-syntax ([((TOPLEVEL ...) (DEFINES ...) (BODY ...)) (forms-splitter #'EXPRS)]
                    [REQUIRES (datum->syntax #'EXPRS (pollen-requires))]
-                   [RENDER (datum->syntax #'EXPRS 'render)]
+                   [EXPORT-FUNC (datum->syntax #'EXPRS 'fill-template)]
                    [DOC (datum->syntax #'EXPRS 'doc)]
                    [METAS (datum->syntax #'EXPRS 'metas)]
                    [HERE (datum->syntax #'EXPRS 'here)])
@@ -59,7 +59,7 @@
           (provide RENDER)
           REQUIRES
           TOPLEVEL ...
-          (define/contract (RENDER DOC METAS HERE)
+          (define/contract (EXPORT-FUNC DOC METAS HERE)
             (-> any/c hash? pagenode? bytes?)
             DEFINES ...
             (concat+write/bytes HERE (list . (BODY ...))))))]))
