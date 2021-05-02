@@ -1,6 +1,9 @@
 #lang racket/base
 
-(require (for-syntax racket/base pollen/setup racket/match)
+(require (for-syntax pollen/setup
+                     racket/base
+                     racket/match
+                     "private/constants.rkt")
          pollen/pagetree
          racket/contract
          racket/list)
@@ -51,7 +54,7 @@
     [(_ . EXPRS)
      (with-syntax ([((TOPLEVEL ...) (DEFINES ...) (BODY ...)) (forms-splitter #'EXPRS)]
                    [REQUIRES (datum->syntax #'EXPRS (pollen-requires))]
-                   [EXPORT-FUNC (datum->syntax #'EXPRS 'fill-template)]
+                   [EXPORT-FUNC (datum->syntax #'EXPRS template-proc-provide)]
                    [DOC (datum->syntax #'EXPRS 'doc)]
                    [METAS (datum->syntax #'EXPRS 'metas)]
                    [HERE (datum->syntax #'EXPRS 'here)])
