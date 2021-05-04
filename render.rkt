@@ -1,6 +1,7 @@
 #lang racket/base
 
 (require pollen/core
+         pollen/setup
          racket/string
          sugar/file
          "private/constants.rkt"
@@ -33,13 +34,14 @@
 
 ;; This function is specifically for rendering Pollen sources.
 (define (render source-path output-path)
-  (define doc (get-doc source-path))
-  (define metas (get-metas source-path))
-
   (define target-ext (get-ext output-path))
-  (define template-path
-    (or (template-from-metas source-path metas target-ext)
-        (find-default-template source-path target-ext)
-        (err "No template available for ~a targeting ~a" source-path target-ext)))
-  (define render-proc (get-template-fill-proc template-path))
-  (render-proc doc metas (string->symbol (format "~a" output-path))))
+  (parameterize ([current-poly-target (string->symbol target-ext)])
+    (define doc (get-doc source-path))
+    (define metas (get-metas source-path))
+
+    (define template-path
+      (or (template-from-metas source-path metas target-ext)
+          (find-default-template source-path target-ext)
+          (err "No template available for ~a targeting ~a" source-path target-ext)))
+    (define render-proc (get-template-fill-proc template-path))
+    (render-proc doc metas (string->symbol (format "~a" output-path)))))
