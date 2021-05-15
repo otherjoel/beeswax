@@ -30,13 +30,13 @@
 ;  A pagetree in the source will be converted to a list of source files using Pollen’s get-source
 
 (define (raco-beeswax-render)
-  (define target-ext (make-parameter (symbol->string (current-poly-target))))
+  (define target-ext (make-parameter (symbol->string (car (setup:poly-targets)))))
   (define args
     (command-line #:program "raco beeswax render"
                   #:argv (vector-drop (current-command-line-arguments) 1)
                   #:once-any
                   [("-t" "--target") target-arg "Fallback render target for poly sources"
-                                      (target-ext target-arg)]
+                                     (target-ext target-arg)]
                   #:args rest-args
                   rest-args))
   (for ([source (in-list args)])

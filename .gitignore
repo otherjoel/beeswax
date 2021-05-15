@@ -5,3 +5,8 @@
 *.swp
 compiled/
 /doc/
+*.tex
+*.html
+!scribblings/sample-proj/template.html
+*.css
+*.js

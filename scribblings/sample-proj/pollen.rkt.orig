@@ -1,0 +1,5 @@
+#lang racket/base
+
+(module setup racket/base
+  (define external-renderer '(beeswax/for-pollen external-renderer))
+  (provide external-renderer))
