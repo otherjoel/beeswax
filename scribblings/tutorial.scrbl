@@ -1,6 +1,8 @@
 #lang scribble/manual
 
-@require[@for-label[racket/base
+@require[@for-label[beeswax/template
+                    beeswax/for-pollen
+                    racket/base
                     pollen/core
                     pollen/pagetree
                     pollen/template]
@@ -40,6 +42,9 @@ In the same folder, save an HTML template:
 Our sample Pollen project is now fully operational; you can @exec{raco pollen render fleas.html} and
 Pollen will create a @filepath{fleas.html} that matches our template.
 
+@margin-note{You might have noticed we don’t have a @filepath{pollen.rkt} file in this project.
+We’ll add it in a bit.}
+
 @section{Beeswax conversion}
 
 We’re now going to create a Beeswax template.
@@ -47,7 +52,7 @@ We’re now going to create a Beeswax template.
 Step one: open the same @filepath{template.html} in DrRacket and add the line @racketmodfont{#lang
 beeswax/template} to the top, like this:
 
-@codeblock{
+@filebox["template.html.rkt" @codeblock{
 #lang beeswax/template
 
 <html>
@@ -55,7 +60,7 @@ beeswax/template} to the top, like this:
   <h1>◊(hash-ref metas 'title)</h1>
   ◊(->html doc)
 </html>
-}
+}]
 
 (Also change @tt{POLLEN} to @tt{BEESWAX} in the @tt{<title>} tag as shown. This isn’t strictly
 necessary, but it will help make clear later on which template file we’re using.)
@@ -63,60 +68,57 @@ necessary, but it will help make clear later on which template file we’re usin
 Step two: save the modified template to a @bold{new} file with a @filepath{.rkt} extension:
 @filepath{template.html.rkt}.
 
-There, your template is now a Beeswax template!
+There, your template is now a Beeswax template! Beeswax templates use exactly the same syntax and
+facilities as normal Pollen templates, so adding the @hash-lang[] line at the top and renaming the
+file is generally all you’ll need to do to convert an existing template.
 
-You’ll notice DrRacket is now giving you
-the white-glove treatment: syntax highlighting, definition arrows, and a helpful toolbar
-button.
+You’ll notice DrRacket is now giving you the white-glove treatment: syntax highlighting, definition
+arrows, and a helpful toolbar button.
 
-Within a @racketmodfont{beeswax/template} file, you have access to all the same things
-you do inside a normal Pollen template. You can refer to @racket[_doc], @racket[_metas],
-the magic variable @racket[_here] (the current output file pagenode), anything in the
-@racketmodfont{pollen/core}, @racketmodfont{pollen/template} and @racketmodfont{pollen/pagetree}
-modules, and of course everything @racket[provide]d from a @filepath{pollen.rkt} file located
-in the same folder or in a parent folder.
+Within a @racketmodname[beeswax/template] file, you have access to all the same things you do inside
+a normal Pollen template: @racketid[doc], @racketid[metas], @racketid[here], a number of Pollen
+functions , and of course everything @racket[provide]d from a nearby @filepath{pollen.rkt} file.
 
 @subsection{Your template is now a module}
 
-Everything in a @hash-lang[] @racket[beeswax/template] file is wrapped in a function that is
-@racket[provide]d to other files. (This is similar to how @hash-lang[] @racket[pollen] files wrap
-their contents into the provided values called @racket[_doc] and @racket[_metas].) The function is
-always named @racket[#,template-proc-provide] and it takes three arguments: @racket[_doc] (which can
-be any value), @racket[_metas] (a hash table), and @racket[_here], an output path in symbol form (i.e.,
-a @racket[pagenode?]).
+Everything in a @code{#lang beeswax/template} file is wrapped in a function that is
+@racket[provide]d to other files. (This is similar to how @code{#lang pollen} files wrap their
+contents into the provided values @racketid[doc] and @racketid[metas].) The function is always named
+@racket[#,template-proc-provide] and it takes three arguments: @racket[_doc] (which can be any
+value), @racket[_metas] (a hash table), and @racket[_here], an output path in symbol form (i.e., a
+@racket[pagenode?]).
 
-You can see this by clicking the @onscreen{Run} button at the
-top of the DrRacket window for @filepath{template.html.rkt} and poking around a little in the REPL:
+You can see this by clicking the @onscreen{Run} button at the top of the DrRacket window for
+@filepath{template.html.rkt} and poking around a little in the REPL:
 
 @(sandbox '(require "template.html.rkt")) 
 @examples[#:eval sandbox #:label #false
-          template-fill]
+          apply-template]
 
-When you call this function, it renders the values you pass it into the template. It returns the
+When you call this function, it renders the values you pass it into the template and returns the
 bytes of the rendered result. Try calling @racket[#,template-proc-provide] with some placeholder
 values for @racket[_doc], @racket[_metas] and @racket[_here]:
 
 @examples[#:eval sandbox
           #:label #false
-          (display (template-fill "What’s up doc?"
-                                  (hash 'title "Test")
-                                  'test.html))]
+          (display (apply-template "What’s up doc?"
+                                   (hash 'title "Test")
+                                   'test.html))]
 
-It’s not much of a leap at this point to render the @filepath{fleas.html.pm} Pollen source file
-we created:
+It’s not much of a leap at this point to render the @filepath{fleas.html.pm} Pollen source file we
+created:
 
 @examples[#:eval sandbox
           #:label #false
-          (require "fleas.html.pm") (code:comment @#,elem{Get doc and metas})
-          (display (template-fill doc metas 'fleas.html))]
-
-And that’s Beeswax templates. You can use Pollen with
+          (code:comment @#,elem{Get doc and metas})
+          (require "fleas.html.pm") 
+          (display (apply-template doc metas 'fleas.html))]
 
 @section{Pollen integration}
 
 At this point, Pollen itself does not know anything about @filepath{template.html.rkt}. If you tell
-Pollen to render @filepath{fleas.html} you’ll see it renders the file using the old @filepath{template.html}
-template:
+Pollen to render @filepath{fleas.html} you’ll see it renders the file using the old
+@filepath{template.html} template:
 
 @ensure-pollen-rkt['absent]
 @void[(sandbox-raco "pollen" '#("reset"))]
@@ -151,23 +153,23 @@ Now render the file again:
 @file->string[(sample-file "fleas.html")]
 }
 
-The output of the first command shows that Pollen has involved Beeswax in the rendering process. Looking
-at the contents of @filepath{fleas.html} confirms that the Beeswax template was used this time, not the
-Pollen one.
+The output of the first command shows that Pollen has involved Beeswax in the rendering process
+(“@exec{pollen: beeswax rendered …}”. Looking at the contents of @filepath{fleas.html} confirms that
+the Beeswax template was used this time, not the Pollen one.
 
-When Pollen sees a value for @racketid[external-renderer] provided by the @racket[setup] submodule of a
-local @filepath{pollen.rkt} file, instead of rendering the file itself, it calls the function specified,
-and uses whatever bytes it gets back as the rendered result.
+When Pollen sees a value for @racketid[external-renderer] provided by the @racket[setup] submodule
+of a local @filepath{pollen.rkt} file, instead of rendering the file itself, it calls the function
+specified, and uses whatever it gets back as the rendered result.
 
-The function @racket[external-renderer] provided by @racketmodfont{beeswax/for-pollen} does its own work
-to find @filepath{template.html.rkt}. It then uses that file’s
-@racket[template-fill] function on the @racket[doc] and @racket[metas] from the source file,
+The function @racket[external-renderer] provided by @racketmodname[beeswax/for-pollen] does its own work
+to find the right Beeswax template (in this case @filepath{template.html.rkt}). It then uses that file’s
+@racket[#,template-proc-provide] function on the @racket[doc] and @racket[metas] from the source file,
 (pretty much just as we did manually in the previous section).
 
-If you start the Pollen project server with @exec{raco pollen start} and preview @filepath{fleas.html}
-you’ll see the Beeswax template also being used to render the live preview.
+If you start the Pollen project server with @exec{raco pollen start} and preview
+@filepath{fleas.html} you’ll see the Beeswax template also being used to render the live preview.
 
-@margin-note{Note that modifying a Beeswax template does not invalidate Pollen’s render cache. We can
-tell Pollen to use Beeswax for rendering but it still does not know anything about our alternative
-template files, so it isn’t watching them for changes when determining when to force a re-render.}
-
+@margin-note{Note that modifying a Beeswax template does not invalidate Pollen’s render cache. We
+can tell Pollen to use Beeswax for rendering but it still does not know anything about our
+alternative template files, so it isn’t watching them for changes when determining when to force a
+re-render.}
