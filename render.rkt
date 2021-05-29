@@ -7,7 +7,7 @@
          "private/constants.rkt"
          "private/files.rkt")
 
-(provide get-template-fill-proc
+(provide get-template-proc
          render)
 
 (define (err  msg . vals)
@@ -18,7 +18,7 @@
    (exn:fail:contract (string-replace (exn-message e) orig-source "beeswax-renderer")
                       (exn-continuation-marks e))))
 
-(define (get-template-fill-proc template-path)
+(define (get-template-proc template-path)
   (define template-proc
     (with-handlers ([exn:fail:filesystem:missing-module?
                      (λ (e) (beeswax-exn e "standard-module-name-resolver"))]
@@ -43,5 +43,5 @@
       (or (template-from-metas source-path metas target-ext)
           (find-default-template source-path target-ext)
           (err "No template available for ~a targeting ~a" source-path target-ext)))
-    (define render-proc (get-template-fill-proc template-path))
+    (define render-proc (get-template-proc template-path))
     (render-proc doc metas (string->symbol (format "~a" output-path)))))
