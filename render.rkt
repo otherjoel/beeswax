@@ -1,6 +1,6 @@
 #lang racket/base
 
-(require pollen/core
+(require pollen/cache
          pollen/setup
          racket/string
          sugar/file
@@ -36,8 +36,8 @@
 (define (render source-path output-path)
   (define target-ext (get-ext output-path))
   (parameterize ([current-poly-target (string->symbol target-ext)])
-    (define doc (get-doc source-path))
-    (define metas (get-metas source-path))
+    (define doc (cached-doc source-path))
+    (define metas (cached-metas source-path))
 
     (define template-path
       (or (template-from-metas source-path metas target-ext)
