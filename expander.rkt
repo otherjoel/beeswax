@@ -65,20 +65,13 @@
           (define/contract (EXPORT-FUNC DOC METAS HERE)
             (-> any/c hash? pagenode? bytes?)
             DEFINES ...
-            (concat+write/bytes HERE (list . (BODY ...))))))]))
+            (apply bytes-append
+                   (map ->bytes (strip-leading-whitespace (list . (BODY ...))))))))]))
 
-(define (->string->bytes x)
+(define (->bytes x)
   (cond
     [(bytes? x) x]
     [(string? x) (string->bytes/utf-8 x)]
     [(or (null? x) (void? x)) #""]
     [(or (symbol? x) (number? x) (path? x) (char? x)) (string->bytes/utf-8 (format "~a" x))]
     [else (string->bytes/utf-8 (format "~v" x))]))
-
-(define (concat+write/bytes filename xs)
-  (with-output-to-file (format "~a" filename)
-    (lambda ()
-      (define bits (apply bytes-append (map ->string->bytes (strip-leading-whitespace xs))))
-      (write-bytes bits)
-      bits)
-    #:exists 'replace))

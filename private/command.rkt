@@ -43,8 +43,14 @@
     (define outpath (->output source (target-ext)))
         (match-define-values
           ((cons render-result _) _ ms _)
-          (time-apply render (list source outpath)))
+          (time-apply render+write (list source outpath)))
         (log-beeswax-info "rendered /~a → /~a (~ams)" source outpath ms)))
+
+(define (render+write source output)
+  (with-output-to-file output
+    (λ ()
+      (write-bytes (render source output)))
+    #:exists 'replace))
 
 (define (raco-beeswax-help)
   (displayln "Beeswax commands:
