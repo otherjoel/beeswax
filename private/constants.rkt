@@ -2,4 +2,4 @@
 
 (provide (all-defined-out))
 
-(define template-proc-provide 'template-fill)
+(define template-proc-provide 'apply-template)
