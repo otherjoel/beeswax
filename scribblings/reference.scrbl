@@ -5,6 +5,7 @@
                      beeswax/template
                      beeswax/render
                      pollen/core
+                     pollen/cache
                      pollen/template
                      pollen/pagetree
                      pollen/setup
@@ -50,16 +51,22 @@ modules}
 @subsection{The @tproc function}
 
 Beeswax templates wrap their contents inside a function named @tproc that is @racket[provide]d to
-other files. Any @racket[require]-like forms within the template are lifted to the top level. Any
-@racket[define]-like forms are moved to the start of the function --- so you should be careful that
-definitions within the template don’t depend on side-effects from other expressions.
+other files.
 
 @defproc[(apply-template [doc any/c] [metas hash?] [here pagenode?]) bytes?]{
+
+@margin-note{Any Racket module that provides a procedure with the same name and arity as this
+one can be used as a Beeswax template, even if written in a different @hash-lang[]. This is useful
+when writing templates for binary file formats.}
 
 This is an implicit function provided by every @code{#lang beeswax/template} file. The function
 definition surrounds the contents of the template; calling the function renders a document, using
 @racket[_doc], @racket[_metas] and @racket[_here] wherever they are referred to in escaped Racket
 expressions within the template.
+
+Any @racket[require]-like forms within the template are lifted to the top level. Any
+@racket[define]-like forms are moved to the start of the function --- so you should be careful that
+definitions within the template don’t depend on side-effects from other expressions.
 
 Returns the bytes of the rendered result, stripped of any leading whitespace.
 
@@ -72,9 +79,9 @@ extension for the template’s output format. So for example, a template for HTM
 named @filepath{template.html.rkt}.
 
 Your template will be useable (e.g., via @racket[dynamic-require]) no matter what you name it. But
-if you are using Pollen with @racket[external-renderer], Beeswax’s @racket[render] function, or
-@secref["raco-beeswax"] to apply your templates, you’ll want to name it like this, because those
-tools will be unable to locate your template otherwise.
+if you are applying your templates using Pollen with @racket[external-renderer], Beeswax’s
+@racket[render] function, or @secref["raco-beeswax"], you’ll want to use these filename conventions,
+because those tools will be unable to locate your template otherwise.
 
 See also the documentation for @racket[render] to see how Beeswax determines which template to use.
 
@@ -83,13 +90,16 @@ specify that its template filenames should be identical to those of normal Polle
 would have the advantage of playing nicely with Pollen’s render cache, and it would mean slightly
 fewer redundant cycles used to locate the correct template when doing a render within the context of
 @exec{raco pollen render} (since Pollen always does the work of locating its own template even when
-using an external renderer).}
+using an external renderer).
+
+On the other hand, the @filepath{.rkt} extension highlights the fact that a Beeswax template is a
+proper Racket module, and it makes Beeswax more friendly to use outside Pollen projects.}
 
 @section{Rendering}
 
 @defmodule[beeswax/render]
 
-This module provides convenience functions.
+This module provides some convenience functions for working with Beeswax templates.
 
 @defproc[(get-template-proc [template (or/c path? path-string?)]) procedure?]{
 
@@ -109,7 +119,7 @@ of calling that template’s @tproc procedure with the @racketid[doc] and @racke
 the source document, and with @racket[_output] (in symbol form) as the third parameter.
 
 The @racket[_source] file is assumed to be a valid Pollen source: its @racketid[doc] and
-@racketid[metas] will be retrieved with @racket[get-doc] and @racket[get-metas].
+@racketid[metas] will be retrieved with @racket[cached-doc] and @racket[cached-metas].
 
 If the template uses @code{#lang beeswax/template}, then the result will be @racket[bytes?],
 otherwise it could be anything.
