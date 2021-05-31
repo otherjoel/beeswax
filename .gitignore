@@ -6,7 +6,9 @@
 compiled/
 /doc/
 *.tex
+!scribblings/aux.tex
 *.html
 !scribblings/sample-proj/template.html
 *.css
+!scribblings/aux.css
 *.js
