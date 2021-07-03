@@ -1,4 +1,4 @@
-beeswax
+beeswax [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](CODE_OF_CONDUCT.md)
 =======
 
 Beeswax is a `#lang` (a [Racket][r] DSL) for string-based templates, as well as some facilities for
