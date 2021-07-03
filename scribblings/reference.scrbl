@@ -116,7 +116,9 @@ procedure, an exception is raised. The signature of the procedure is not checked
 
 Locates the correct Beeswax template for the source and target output format, and returns the result
 of calling that template’s @tproc procedure with the @racketid[doc] and @racketid[metas] provided by
-the source document, and with @racket[_output] (in symbol form) as the third parameter.
+the source document, and with @racket[_output] (in symbol form) as the third parameter. This
+function does not write any output to the filesystem; @racket[_output] is only used to determine the
+target file format.
 
 The @racket[_source] file is assumed to be a valid Pollen source: its @racketid[doc] and
 @racketid[metas] will be retrieved with @racket[cached-doc] and @racket[cached-metas].

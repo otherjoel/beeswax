@@ -82,8 +82,12 @@ shown in the tutorial.
 
 @margin-note{The commands shown are actually run each time this documentation is built, so the time
 measurements reflect the performance of whatever environment was used to built this copy of this
-document. If you are viewing this document from a local Racket installation, these are @emph{your}
-computer’s numbers!}
+document.
+
+If you are viewing this document from a local Racket installation, these are @emph{your} computer’s
+numbers! They depend not only on the hardware, but also the nature of other workloads running at the
+same time in that environment. The times reflected on @tt{docs.racket-lang.org} are generally going
+to be slower than those measured on your local computer.}
 
 @ensure-pollen-rkt['absent]
 @; don’t use the actual output of this one since it will include a bunch of long messy paths:

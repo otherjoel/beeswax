@@ -17,14 +17,18 @@ Beeswax was designed to be easy to use within @seclink["top" #:doc '(lib
 "pollen/scribblings/pollen.scrbl")]{Pollen} projects, but can be of use in other Racket projects as
 well.
 
-@bold{To install Beeswax} from the command line:
+@bold{Warning: Beeswax isn’t done yet, and will probably change.} I will announce any breaking
+changes in the
+@hyperlink["https://github.com/otherjoel/beeswax/discussions/categories/announcements"]{Announcements}
+section of the project’s discussion forum.
+
+@bold{Installation:} To install Beeswax from the command line:
 
 @terminal{
 @:>{raco pkg install beeswax}}
 
 Or using DrRacket: click the @onscreen{File} menu → @onscreen{Install Package …}.
 
-@margin-note{@bold{Warning:} Beeswax isn’t done yet, and will probably change.}
 
 @local-table-of-contents[]
 
