@@ -1,16 +1,15 @@
 #lang racket/base
 
 (require racket/file
-         racket/list
          racket/logging
          racket/runtime-path
          racket/string
          raco/all-tools
          scribble/core
+         scribble/example
          scribble/html-properties
          scribble/latex-properties
-         scribble/manual
-         scribble/example)
+         scribble/manual)
 
 (provide sandbox
          sample-file
@@ -52,8 +51,8 @@
    'info 'pollen 'info 'beeswax)
   (string-join (reverse raco-events) "\n"))
 
-(define-runtime-path aux-css "aux.css")
-(define-runtime-path aux-tex "aux.tex")
+(define-runtime-path aux-css "additional.css")
+(define-runtime-path aux-tex "additional.tex")
 
 (define (terminal . args)
   (compound-paragraph (style "terminal" (list (color-property (list #x66 #x33 #x99))
