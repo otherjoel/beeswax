@@ -4,7 +4,9 @@
                      racket/base
                      racket/match
                      "private/constants.rkt")
+         pollen/core
          pollen/pagetree
+         pollen/setup
          racket/contract
          racket/list)
 
@@ -65,8 +67,12 @@
           (define/contract (EXPORT-FUNC DOC METAS HERE)
             (-> any/c hash? pagenode? bytes?)
             DEFINES ...
-            (apply bytes-append
-                   (map ->bytes (strip-leading-whitespace (list . (BODY ...))))))))]))
+            (define result
+              (parameterize ([current-metas METAS]
+                             [current-pagetree (make-project-pagetree (current-project-root))])
+                (strip-leading-whitespace (list . (BODY ...)))))
+            
+            (apply bytes-append (map ->bytes result)))))]))
 
 (define (->bytes x)
   (cond

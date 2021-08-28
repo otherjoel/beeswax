@@ -1,12 +1,17 @@
 #lang racket/base
 
 (require (for-syntax racket/base))
-(require rackunit
+(require pollen/setup
+         rackunit
+         racket/list
          racket/string
          "data/test.html.pm"
          "data/template.html.rkt")
 
-(define output (apply-template doc metas 'test.html))
+
+(define output
+  (parameterize ([current-project-root (build-path (current-directory) "data")])
+    (apply-template doc metas 'test.html)))
 
 (check-true (bytes? output))
 
@@ -20,4 +25,16 @@
 (check-line 2 "True!" "when/splice[#t]")
 (check-line 3 "Nothing:" "when/splice[#f]")
 (check-line 4 "test.html" "value of here")
-(check-line 5 "(pagetree-root first.html example.html third.html)" "(current-pagetree)")
+(check-line 5 "'(pagetree-root first.html example.html third.html)" "(current-pagetree)")
+
+(test-case
+ "Check (current-metas)"
+ (define should-be-metas (cadr (read (open-input-string (list-ref lines 6)))))
+ (check-equal? (hash-ref should-be-metas 'title) "The Muse in the Machine"))
+
+;; Have to filter out the last part of the absolute path since it will be
+;; different on every computer
+(test-case
+ "Check (current-project-root) required from pollen/setup"
+ (define p (apply build-path (take-right (explode-path (string->path (list-ref lines 7))) 3)))
+ (check-equal? (path->string p) "beeswax/test/data"))
