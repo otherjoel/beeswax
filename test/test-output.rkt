@@ -11,7 +11,7 @@
 
 (define output
   (parameterize ([current-project-root (build-path (current-directory) "data")])
-    (apply-template doc metas 'test.html)))
+    (apply-template doc metas 'example.html)))
 
 (check-true (bytes? output))
 
@@ -24,9 +24,10 @@
 (check-line 1 "<test-root><strong>Good morning.</strong></test-root>" "doc")
 (check-line 2 "True!" "when/splice[#t]")
 (check-line 3 "Nothing:" "when/splice[#f]")
-(check-line 4 "test.html" "value of here")
+(check-line 4 "example.html" "value of here")
 (check-line 5 "'(pagetree-root first.html example.html third.html)" "(current-pagetree)")
 
+;; Line 6
 (test-case
  "Check (current-metas)"
  (define should-be-metas (cadr (read (open-input-string (list-ref lines 6)))))
@@ -38,3 +39,7 @@
  "Check (current-project-root) required from pollen/setup"
  (define p (apply build-path (take-right (explode-path (string->path (list-ref lines 7))) 3)))
  (check-equal? (path->string p) "beeswax/test/data"))
+
+(check-line 8 "The Muse in the Machine" "title in metas")
+(check-line 9 "first.html" "(previous here)")
+(check-line 10 "third.html" "(next here)")

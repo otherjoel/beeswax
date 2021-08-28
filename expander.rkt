@@ -6,6 +6,7 @@
                      "private/constants.rkt")
          pollen/core
          pollen/pagetree
+         pollen/private/splice
          pollen/setup
          racket/contract
          racket/list)
@@ -70,7 +71,7 @@
             (define result
               (parameterize ([current-metas METAS]
                              [current-pagetree (make-project-pagetree (current-project-root))])
-                (strip-leading-whitespace (list . (BODY ...)))))
+                (strip-leading-whitespace (splice (list . (BODY ...))))))
             
             (apply bytes-append (map ->bytes result)))))]))
 
