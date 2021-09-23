@@ -5,6 +5,7 @@
 *.swp
 compiled/
 /doc/
+scribblings/sample-proj/pollen.rkt
 *.tex
 !scribblings/aux.tex
 *.html
