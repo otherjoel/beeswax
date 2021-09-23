@@ -9,6 +9,7 @@
 (define scribblings '(("scribblings/beeswax.scrbl" (multi-page))))
 
 (define raco-commands '(("beeswax" (submod beeswax/private/command raco) "issue Beeswax command" #f)))
-(define test-omit-paths '("scribblings/sample-proj" "test/data"))
+(define test-omit-paths '("scribblings/sample-proj" "scribblings/beeswax.scrbl" "test/data"))
+(define compile-omit-paths '("scribblings/sample-proj" "test"))
 (define pkg-desc "A Pollen-friendly template language")
 (define version "0.2")
