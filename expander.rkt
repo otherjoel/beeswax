@@ -67,10 +67,10 @@
           TOPLEVEL ...
           (define/contract (EXPORT-FUNC DOC METAS HERE)
             (-> any/c hash? pagenode? bytes?)
-            DEFINES ...
             (define result
               (parameterize ([current-metas METAS]
                              [current-pagetree (make-project-pagetree (current-project-root))])
+                DEFINES ...
                 (strip-leading-whitespace (splice (list . (BODY ...))))))
             
             (apply bytes-append (map ->bytes result)))))]))

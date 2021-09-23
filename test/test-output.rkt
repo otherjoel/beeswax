@@ -43,3 +43,8 @@
 (check-line 8 "The Muse in the Machine" "title in metas")
 (check-line 9 "first.html" "(previous here)")
 (check-line 10 "third.html" "(next here)")
+
+;; Since `define`s get sifted and relocated, test to ensure that they can properly
+;; make use of current-pagetree and current-metas. (Github issue #16)
+(check-line 13 "Define with pagetree function works" "define that references current-pagetree")
+(check-line 14 "Define with current-metas works" "define that references current-metas")
