@@ -37,8 +37,8 @@
 ;; different on every computer
 (test-case
  "Check (current-project-root) required from pollen/setup"
- (define p (apply build-path (take-right (explode-path (string->path (list-ref lines 7))) 3)))
- (check-equal? (path->string p) "beeswax/test/data"))
+ (define p (take-right (explode-path (string->path (list-ref lines 7))) 3))
+ (check-equal? (map path->string p) '("beeswax" "test" "data")))
 
 (check-line 8 "The Muse in the Machine" "title in metas")
 (check-line 9 "first.html" "(previous here)")
