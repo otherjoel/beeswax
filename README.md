@@ -5,7 +5,7 @@ Beeswax is a `#lang` (a [Racket][r] DSL) for string-based templates, as well as 
 applying templates to sources. It is designed to fit seamlessly into [Pollen][pp] projects but could
 be useful in other contexts.
 
-**Documentation is at <https://docs.racket-lang.org/beeswax/index.html>**
+**Documentation is at <https://joeldueck.com/what-about/beeswax>**
 
 To install Beeswax from the command line:
 
