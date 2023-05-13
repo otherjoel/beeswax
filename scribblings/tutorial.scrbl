@@ -19,6 +19,7 @@ So let’s make a very small, simple one.
 
 In an empty folder, save a Pollen source document:
 
+@(clear-sandbox-compile-cache!)
 @filebox["fleas.html.pm" @codeblock{
 #lang pollen
 

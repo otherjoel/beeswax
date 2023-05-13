@@ -15,6 +15,7 @@
          sample-file
          sandbox-raco
          ensure-pollen-rkt
+         clear-sandbox-compile-cache!
          terminal
          :>
          rem)
@@ -26,6 +27,9 @@
 (define sandbox
   (parameterize ([current-directory sample-proj-dir])
     (make-base-eval #:lang 'racket/base)))
+
+(define (clear-sandbox-compile-cache!)
+  (delete-directory/files (sample-file "compiled") #:must-exist? #f))
 
 (define (ensure-pollen-rkt state)
   (case state

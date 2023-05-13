@@ -90,8 +90,8 @@ same time in that environment. The times reflected on @tt{docs.racket-lang.org} 
 to be slower than those measured on your local computer.}
 
 @ensure-pollen-rkt['absent]
-@; don’t use the actual output of this one since it will include a bunch of long messy paths:
-@(void @sandbox-raco["pollen" '#("reset")]) 
+
+@(clear-sandbox-compile-cache!) 
 
 @terminal{
 @rem{Reset the compile cache}
