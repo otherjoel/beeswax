@@ -7,6 +7,12 @@ be useful in other contexts.
 
 **Documentation is at <https://joeldueck.com/what-about/beeswax>**
 
+> [!NOTE]
+> The only condition of Beeswax's [permissive license](LICENSE.md) is that you introduce yourself
+to me by emailing me at <joel@jdueck.net>. See [How I License][hil] for more background.
+
+[hil]: https://joeldueck.com/how-i-license.html
+
 To install Beeswax from the command line:
 
     > raco pkg install beeswax

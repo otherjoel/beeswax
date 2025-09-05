@@ -17,10 +17,10 @@ Beeswax was designed to be easy to use within @seclink["top" #:doc '(lib
 "pollen/scribblings/pollen.scrbl")]{Pollen} projects, but can be of use in other Racket projects as
 well.
 
-@bold{Warning: Beeswax isn’t done yet, and will probably change.} I will announce any breaking
-changes in the
-@hyperlink["https://github.com/otherjoel/beeswax/discussions/categories/announcements"]{Announcements}
-section of the project’s discussion forum.
+@callout{If you use Beeswax in your project, @hyperlink["mailto:joel@jdueck.net"]{email Joel} to
+introduce yourself! This is the sole condition of the project’s
+@hyperlink["https://github.com/otherjoel/beeswax/blob/main/LICENSE.md"]{permissive license.} (See
+@hyperlink["https://joeldueck.com/how-i-license.html"]{How I License} for background.)}
 
 @bold{Installation:} To install Beeswax from the command line:
 

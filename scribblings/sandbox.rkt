@@ -18,7 +18,8 @@
          clear-sandbox-compile-cache!
          terminal
          :>
-         rem)
+         rem
+         callout)
 
 (define-runtime-path sample-proj-dir "sample-proj/")
 (define (sample-file filename)
@@ -74,3 +75,9 @@
 (define (rem . args)
   (apply racketcommentfont (cons "# " args)))
 
+(define (callout . args)
+  (paragraph (style "callout" (list (color-property (list #x01 #x46 #x6c))
+                                    (css-style-addition aux-css)
+                                    (alt-tag "div")
+                                    (tex-addition aux-tex)))
+             args))
